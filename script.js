@@ -71,7 +71,7 @@ const displayMovements = movements => {
                         ${i + 1} ${type}
                     </div>
                     <div class="movements__date">24/01/2037</div>
-                    <div class="movements__value">-${Math.abs(mov)}&#8377;</div>
+                    <div class="movements__value">${Math.abs(mov)}₹</div>
                 </div>`;
         containerMovements.insertAdjacentHTML('afterbegin', html);
     });
@@ -80,9 +80,33 @@ displayMovements(account1.movements);
 
 const calcDisplayBalance = movements => {
     const balance = movements.reduce((acc, curr) => acc + curr, 0);
-    labelBalance.innerHTML = `${balance}&#8377;`;
+    labelBalance.textContent = `${balance}₹`;
 };
 calcDisplayBalance(account1.movements);
+
+const calcDisplaySummary = movements => {
+    const incomes = movements
+        .filter(mov => mov > 0)
+        .reduce((acc, curr) => acc + curr, 0);
+    labelSumIn.textContent = `${incomes}₹`;
+    const out = Math.abs(
+        movements.filter(mov => mov < 0).reduce((acc, curr) => acc + curr, 0)
+    );
+    labelSumOut.textContent = `${out}₹`;
+
+    // each account holder has different interest rate
+    const interest = movements
+        .filter(mov => mov > 0)
+        .map(deposit => (deposit * 1.2) / 100)
+        .filter((int, i, arr) => {
+            console.log(arr);
+            // returns interests that are greater than 1
+            return int > 1;
+        })
+        .reduce((acc, curr) => acc + curr, 0);
+    labelSumInterest.textContent = `${interest}₹`;
+};
+calcDisplaySummary(account1.movements);
 
 const createUserName = accounts => {
     accounts.forEach(acc => {
