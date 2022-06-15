@@ -78,10 +78,21 @@ const displayMovements = movements => {
 };
 displayMovements(account1.movements);
 
+const createUserName = accounts => {
+    accounts.forEach(acc => {
+        acc.userName = acc.owner
+            .toLowerCase()
+            .split(' ')
+            .map(name => name[0])
+            .join('');
+    });
+};
+
+createUserName(accounts);
+console.log(accounts);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-// LECTURES
-// concepts of arrays are in this part
+//
 
 const currencies = new Map([
     ['USD', 'United States dollar'],
