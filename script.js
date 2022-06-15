@@ -78,6 +78,12 @@ const displayMovements = movements => {
 };
 displayMovements(account1.movements);
 
+const calcDisplayBalance = movements => {
+    const balance = movements.reduce((acc, curr) => acc + curr, 0);
+    labelBalance.innerHTML = `${balance}&#8377;`;
+};
+calcDisplayBalance(account1.movements);
+
 const createUserName = accounts => {
     accounts.forEach(acc => {
         acc.userName = acc.owner
@@ -89,7 +95,8 @@ const createUserName = accounts => {
 };
 
 createUserName(accounts);
-console.log(accounts);
+// console.log(accounts);
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 //
