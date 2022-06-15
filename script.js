@@ -161,6 +161,25 @@ btnLogin.addEventListener('click', event => {
     }
 });
 
+btnClose.addEventListener('click', e => {
+    e.preventDefault();
+    const pin = Number(inputClosePin.value);
+    const user = inputCloseUsername.value;
+    inputClosePin.value = inputCloseUsername.value = '';
+    // console.log(user, pin);
+    if (pin === currentAccount.pin && user === currentAccount.username) {
+        const index = accounts.findIndex(
+            acc => acc.username === currentAccount.username
+        );
+        // console.log(index);
+        // delete user
+        accounts.splice(index, 1);
+
+        // hide UI/ logout ui
+        containerApp.style.opacity = 0;
+    }
+});
+
 //  transfer feature
 btnTransfer.addEventListener('click', e => {
     e.preventDefault();
