@@ -144,7 +144,7 @@ btnLogin.addEventListener('click', event => {
     currentAccount = accounts.find(
         acc => acc.username === inputLoginUsername.value
     );
-    console.log(currentAccount);
+    // console.log(currentAccount);
     if (currentAccount?.pin === Number(inputLoginPin.value)) {
         // Display UI and welcome message
         labelWelcome.textContent = `Welcome back, ${
@@ -177,6 +177,20 @@ btnClose.addEventListener('click', e => {
 
         // hide UI/ logout ui
         containerApp.style.opacity = 0;
+    }
+});
+
+// loan : bank grant loan iff there is atleast one deposit which is atleast 10% of requested loan amount
+btnLoan.addEventListener('click', e => {
+    e.preventDefault();
+    const loanAmount = Number(inputLoanAmount.value);
+    inputLoanAmount.value = '';
+    if (
+        loanAmount > 0 &&
+        currentAccount.movements.some(mov => mov >= loanAmount * 0.1)
+    ) {
+        currentAccount.movements.push(loanAmount);
+        updateUI(currentAccount);
     }
 });
 
