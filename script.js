@@ -61,9 +61,13 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = movements => {
+const displayMovements = (movements, sort = false) => {
+    // slice to make a  copy of movements array , we could have used spread operator but for chaining we used slice
+    const transactions = sort
+        ? movements.slice().sort((a, b) => a - b)
+        : movements;
     containerMovements.innerHTML = '';
-    movements.forEach((mov, i) => {
+    transactions.forEach((mov, i) => {
         const type = mov > 0 ? 'deposit' : 'withdrawal';
         const html = `
                 <div class="movements__row">
@@ -215,6 +219,15 @@ btnTransfer.addEventListener('click', e => {
         currentAccount.movements.push(-amount);
         updateUI(currentAccount);
     }
+});
+
+// sort transactions
+// to preserve state of transaction ordering
+let sorted = false;
+btnSort.addEventListener('click', e => {
+    e.preventDefault();
+    displayMovements(currentAccount.movements, !sorted);
+    sorted = !sorted;
 });
 
 /////////////////////////////////////////////////
