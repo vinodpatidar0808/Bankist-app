@@ -175,6 +175,30 @@ const updateUI = account => {
     calcDisplaySummary(account);
 };
 
+let timerId;
+
+const startLogoutTimer = () => {
+    const tick = () => {
+        const min = String(Math.trunc(remTime / 60)).padStart(2, 0);
+        const seconds = String(remTime % 60).padStart(2, 0);
+        labelTimer.textContent = `${min}:${seconds}`;
+        // decrease 1  second from remTime
+        if (remTime === 0) {
+            clearInterval(timerId);
+            labelWelcome.textContent = 'Log in to get started';
+            containerApp.style.opacity = 0;
+        }
+        remTime--;
+    };
+
+    let remTime = 180; // this is 100 seconds
+    // call timer every second
+    // the timer start first after 1 second , so to start immediately export it inside a function
+    tick();
+    timerId = setInterval(tick, 1000);
+    return timerId;
+};
+
 // Event handlers
 
 let currentAccount;
@@ -220,6 +244,10 @@ btnLogin.addEventListener('click', event => {
         // cursor still in focus after logging in so remove it using blur method
         inputLoginPin.blur();
 
+        // without these there willl be 2 timer when you change the user from same render
+        if (timerId) clearInterval(timerId);
+
+        timerId = startLogoutTimer();
         updateUI(currentAccount);
     }
 });
@@ -252,10 +280,15 @@ btnLoan.addEventListener('click', e => {
         loanAmount > 0 &&
         currentAccount.movements.some(mov => mov >= loanAmount * 0.1)
     ) {
-        currentAccount.movements.push(loanAmount);
-        currentAccount.movementsDates.push(new Date().toISOString());
-        updateUI(currentAccount);
+        setTimeout(() => {
+            currentAccount.movements.push(loanAmount);
+            currentAccount.movementsDates.push(new Date().toISOString());
+            updateUI(currentAccount);
+        }, 5000);
     }
+    //reset timer
+    clearInterval(timerId);
+    timerId = startLogoutTimer();
 });
 
 //  transfer feature
@@ -282,6 +315,10 @@ btnTransfer.addEventListener('click', e => {
         currentAccount.movementsDates.push(new Date().toISOString());
         updateUI(currentAccount);
     }
+
+    // reset timer when some activity happens : practical application
+    clearInterval(timerId);
+    timerId = startLogoutTimer();
 });
 
 // sort transactions
